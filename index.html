@@ -7,49 +7,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <style>
       canvas {
-        border: 1px solid black;
+        border: 1px dashed black;
       }
     </style>
   </head>
   <body>
 
-    <h1>Camvas : Zoom Effect</h1>
-    <canvas width='400' height='200'></canvas>
-    <canvas width='400' height='200'></canvas>
+    <h1>Camvas drawImg Demo</h1>
+    <h3>Play Full-HD video (1920x1080) on 640x480 canvas</h3>
+
+    <input id='drw_0' type='button' value='draw_img'>
+    <input id='drw_1' type='button' value='draw_img_stretch'>
+    <input id='drw_2' type='button' value='draw_img_crop1'>
+    <input id='drw_3' type='button' value='draw_img_crop2'>
+    <br>
+    <br>
+
+    <canvas width='640' height='480'></canvas>
 		
     <script src="javascripts/camvas.js"></script>
     <script>
+      // config
+      var draw_mode = 0;
+
+      // render video to canvas
       var ctx = document.getElementsByTagName('canvas')[0].getContext('2d');
-      var ctx2 = document.getElementsByTagName('canvas')[1].getContext('2d');
-      var draw = function(video, dt) {
-
-        // just render
-        // ctx.drawImage(video, 0, 0);
-
-        // render with stretch
-        // ctx.drawImage(video, 0, 0, ctx.canvas.width, ctx.canvas.height);
-
-        // render with center crop
-        // https://www.w3schools.com/tags/canvas_drawimage.asp
-        ctx.drawImage(
-          video,
-          ctx.canvas.width - video.videoWidth,
-          ctx.canvas.height - video.videoHeight,
-        );
-        ctx2.drawImage(
-          video,
-          video.videoWidth - ctx.canvas.width,
-          video.videoHeight - ctx.canvas.height,
-          ctx.canvas.width,
-          ctx.canvas.height,
-          0,
-          0,
-          ctx.canvas.width,
-          ctx.canvas.height,
-        );
-
+      var draw = function(video, dt, cmv) {
+        switch(draw_mode){
+          case 0:
+            cmv.draw_img(ctx);
+            break;
+          case 1:
+            cmv.draw_img_stretch(ctx);
+            break;
+          case 2:
+            cmv.draw_img_crop1(ctx);
+            break;
+          case 3:
+            cmv.draw_img_crop2(ctx);
+            break;
+        }
       }
-      var myCamvas = new camvas(ctx, draw);
+      var myCamvas = new camvas(ctx, draw, {
+        mode: 'fullhd', // qvga, vga, hd, fullhd, 4k, 8k
+      });
+
+      // bind buttons
+      document.getElementById('drw_0').onclick = function(){ draw_mode = 0; };
+      document.getElementById('drw_1').onclick = function(){ draw_mode = 1; };
+      document.getElementById('drw_2').onclick = function(){ draw_mode = 2; };
+      document.getElementById('drw_3').onclick = function(){ draw_mode = 3; };
     </script>
   </body>
 </html>
