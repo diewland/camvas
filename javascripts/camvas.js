@@ -39,10 +39,22 @@ function getUserMedia (constraints, successCallback, errorCallback) {
 // The function takes a canvas context and a `drawFunc` function.
 // `drawFunc` receives two parameters, the video and the time since
 // the last time it was called.
-function camvas(ctx, drawFunc) {
+function camvas(ctx, drawFunc, options) {
   var self = this
   this.ctx = ctx
   this.draw = drawFunc
+  this.profiles = {
+    qvga: { video: {width: {exact: 320}, height: {exact: 240}} },
+    vga:  { video: {width: {exact: 640}, height: {exact: 480}} },
+    hd:   { video: {width: {exact: 1280}, height: {exact: 720}} },
+    fullhd: { video: {width: {exact: 1920}, height: {exact: 1080}} },
+    '4k': { video: {width: {exact: 4096}, height: {exact: 2160}} },
+    '8k': { video: {width: {exact: 7680}, height: {exact: 4320}} },
+  }; // copy from https://webrtc.github.io/samples/src/content/getusermedia/resolution/
+
+  var options = options || {};
+  var mode = options.mode || 'vga';
+  this.profile = this.profiles[mode];
 
   // We can't `new Video()` yet, so we'll resort to the vintage
   // "hidden div" hack for dynamic loading.
@@ -63,7 +75,7 @@ function camvas(ctx, drawFunc) {
   document.body.appendChild(streamContainer)
 
   // The callback happens when we are starting to stream the video.
-  getUserMedia({video: true}, function(stream) {
+  getUserMedia(this.profile, function(stream) {
     // Yay, now our webcam input is treated as a normal video and
     // we can start having fun
     try {
@@ -87,11 +99,43 @@ function camvas(ctx, drawFunc) {
       // since the last frame; that's why we pass along a Delta time `dt`
       // variable (expressed in milliseconds)
       var dt = Date.now() - last
-      self.draw(self.video, dt)
+      self.draw(self.video, dt, self)
       last = Date.now()
       requestAnimationFrame(loop) 
     }
     requestAnimationFrame(loop) 
   } 
+
+  // drawImage tools
+  this.draw_img = function(ctx){
+    ctx.drawImage(self.video, 0, 0);
+  };
+  this.draw_img_stretch = function(ctx){
+    var w = ctx.canvas.width;
+    var h = ctx.canvas.height;
+    ctx.drawImage(self.video, 0, 0, w, h);
+  };
+  this.draw_img_crop1 = function(ctx, x, y){
+    // just move full video to minus x, y
+    x = x || ctx.canvas.width - self.video.videoWidth;
+    y = y || ctx.canvas.height - self.video.videoHeight;
+    ctx.drawImage( self.video, x, y);
+  };
+  this.draw_img_crop2 = function(ctx, sx, sy){
+    // crop video to canvas size first and render on 0, 0
+    var sx = sx || self.video.videoWidth - ctx.canvas.width;
+    var sy = sy || self.video.videoHeight - ctx.canvas.height;
+    ctx.drawImage(
+      self.video,
+      sx,
+      sy,
+      ctx.canvas.width,
+      ctx.canvas.height,
+      0,
+      0,
+      ctx.canvas.width,
+      ctx.canvas.height,
+    );
+  };
 }
 
