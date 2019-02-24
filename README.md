@@ -6,18 +6,16 @@ Uses WebRTC (getUserMedia), Canvas and HTML5 Video.
 
 Check out a sample application, too: [camvas_photobooth](http://cbrandolino.github.io/camvas_photobooth/).
 
-## Example usage:
-  ```javascript
-  window.onload = function(){
-    var ctx = document.getElementsByTagName('canvas')[0].getContext('2d')
-    var draw = function(video, dt) {
-      ctx.drawImage(video, 0, 0)
-    }
-    var myCamvas = new camvas(ctx, draw)
-  }
-  ```
+## Features
+* Webcam profile support ( qvga, vga, hd, fullhd, 4k, 8k )
+* drawImage tools
 
-## Homepage
+## Example
 
-You can find annotated source code, demo and useful resources at [http://cbrandolino.github.com/camvas](http://cbrandolino.github.com/camvas)
+See https://diewland.github.io/camvas/
 
+## TODO
+* change config `mode` to `video_mode`
+* Set canvas width/height from config
+  * default w/h from `video_mode` 
+  * or custom w/h for cropped video
