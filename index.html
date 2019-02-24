@@ -14,7 +14,7 @@
   <body>
 
     <h1>Camvas drawImg Demo</h1>
-    <h3>Play Full-HD video (1920x1080) on 640x480 canvas</h3>
+    <h3>Play HD video (1280x720) on 640x480 canvas</h3>
 
     <input id='drw_0' type='button' value='draw_img'>
     <input id='drw_1' type='button' value='draw_img_stretch'>
@@ -49,7 +49,7 @@
         }
       }
       var myCamvas = new camvas(ctx, draw, {
-        mode: 'fullhd', // qvga, vga, hd, fullhd, 4k, 8k
+        mode: 'hd', // qvga, vga, hd, fullhd, 4k, 8k
       });
 
       // bind buttons
