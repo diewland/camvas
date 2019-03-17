@@ -26,6 +26,3 @@ See https://diewland.github.io/camvas/
 
 ## TODO
 * change config `mode` to `video_mode`
-* ~~Set canvas width/height from config~~
-  * ~~default w/h from `video_mode`~~
-  * ~~or custom w/h for cropped video~~
