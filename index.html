@@ -57,19 +57,19 @@
       // render video to canvas
       var myCamvas = null;
       var ctx = document.getElementsByTagName('canvas')[0].getContext('2d');
-      var draw = function(video, dt, cmv) {
+      var draw = function(video, dt, thiz) {
         switch(draw_mode){
           case 0:
-            cmv.draw_img(ctx);
+            thiz.draw_img(ctx);
             break;
           case 1:
-            cmv.draw_img_stretch(ctx);
+            thiz.draw_img_stretch(ctx);
             break;
           case 2:
-            cmv.draw_img_crop1(ctx);
+            thiz.draw_img_crop1(ctx);
             break;
           case 3:
-            cmv.draw_img_crop2(ctx);
+            thiz.draw_img_crop2(ctx);
             break;
         }
       }

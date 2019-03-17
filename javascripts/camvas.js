@@ -42,7 +42,7 @@ function getUserMedia (constraints, successCallback, errorCallback) {
 function camvas(ctx, drawFunc, options) {
   var self = this
   this.ctx = ctx
-  this.draw = drawFunc
+  this.draw = drawFunc || function(video, dt, thiz){ thiz.draw_img(ctx); };
   this.profiles = {
     qvga: { video: {width: {exact: 320}, height: {exact: 240}} },
     vga:  { video: {width: {exact: 640}, height: {exact: 480}} },
