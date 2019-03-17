@@ -75,7 +75,10 @@
       }
       function render_video(m){
         if(myCamvas != null){ myCamvas.close(); }
-        myCamvas = new camvas(ctx, draw, { mode: m });
+        myCamvas = new camvas(ctx, draw, {
+          mode: m,
+          mode_resize: false,
+        });
         // update config
         mode = m;
         display_info();

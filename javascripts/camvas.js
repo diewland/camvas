@@ -55,6 +55,14 @@ function camvas(ctx, drawFunc, options) {
   var options = options || {};
   var mode = options.mode || 'vga';
   this.profile = this.profiles[mode];
+  var mode_resize = options.mode_resize === undefined ? true : options.mode_resize;
+
+  // default is resize canvas based on profile config
+  // else trust width/height on canvas dom
+  if(mode_resize){
+    this.ctx.canvas.width = this.profile.video.width.exact;
+    this.ctx.canvas.height =  this.profile.video.height.exact;
+  }
 
   // We can't `new Video()` yet, so we'll resort to the vintage
   // "hidden div" hack for dynamic loading.
@@ -66,7 +74,7 @@ function camvas(ctx, drawFunc, options) {
   // for streamed videos.
   this.video.setAttribute('autoplay', '1')
 
-  // The video size depends on mode config
+  // set video size from profile
   this.video.setAttribute('width', this.profile.video.width.exact)
   this.video.setAttribute('height', this.profile.video.height.exact)
 
