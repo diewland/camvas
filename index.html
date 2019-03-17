@@ -13,9 +13,25 @@
   </head>
   <body>
 
-    <h1>Camvas drawImg Demo</h1>
-    <h3>Play HD video (1280x720) on 640x480 canvas</h3>
+    <h1>Camvas mode/drawImg Demo</h1>
+    <h3>Play video on 640x480 canvas</h3>
 
+    <ol>
+      <li>mode : <span id='m'></span></li>
+      <li>drawImage : <span id='d'></span></li>
+    </ol>
+
+    <!-- mode -->
+    <input id='mode_0' type='button' value='qvga'>
+    <input id='mode_1' type='button' value='vga'>
+    <input id='mode_2' type='button' value='hd'>
+    <input id='mode_3' type='button' value='fullhd'>
+    <input id='mode_4' type='button' value='4k'>
+    <input id='mode_5' type='button' value='8k'>
+    <br>
+    <br>
+
+    <!-- drawImage -->
     <input id='drw_0' type='button' value='draw_img'>
     <input id='drw_1' type='button' value='draw_img_stretch'>
     <input id='drw_2' type='button' value='draw_img_crop1'>
@@ -27,10 +43,19 @@
 		
     <script src="javascripts/camvas.js"></script>
     <script>
-      // config
+      // starter config
+      var mode = 'vga';
       var draw_mode = 0;
 
+      // display info
+      function display_info(){
+        document.getElementById('m').innerHTML = mode;
+        document.getElementById('d').innerHTML = draw_mode;
+      }
+      display_info();
+
       // render video to canvas
+      var myCamvas = null;
       var ctx = document.getElementsByTagName('canvas')[0].getContext('2d');
       var draw = function(video, dt, cmv) {
         switch(draw_mode){
@@ -48,15 +73,31 @@
             break;
         }
       }
-      var myCamvas = new camvas(ctx, draw, {
-        mode: 'hd', // qvga, vga, hd, fullhd, 4k, 8k
-      });
+      function render_video(m){
+        if(myCamvas != null){ myCamvas.close(); }
+        myCamvas = new camvas(ctx, draw, { mode: m });
+        // update config
+        mode = m;
+        display_info();
+      }
+      function set_draw_mode(d){
+        // update config
+        draw_mode = d;
+        display_info();
+      }
+      render_video(mode);
 
       // bind buttons
-      document.getElementById('drw_0').onclick = function(){ draw_mode = 0; };
-      document.getElementById('drw_1').onclick = function(){ draw_mode = 1; };
-      document.getElementById('drw_2').onclick = function(){ draw_mode = 2; };
-      document.getElementById('drw_3').onclick = function(){ draw_mode = 3; };
+      document.getElementById('mode_0').onclick = () => { render_video('qvga') }
+      document.getElementById('mode_1').onclick = () => { render_video('vga') }
+      document.getElementById('mode_2').onclick = () => { render_video('hd') }
+      document.getElementById('mode_3').onclick = () => { render_video('fullhd') }
+      document.getElementById('mode_4').onclick = () => { render_video('4k') }
+      document.getElementById('mode_5').onclick = () => { render_video('8k') }
+      document.getElementById('drw_0').onclick = () => { set_draw_mode(0) }
+      document.getElementById('drw_1').onclick = () => { set_draw_mode(1) }
+      document.getElementById('drw_2').onclick = () => { set_draw_mode(2) }
+      document.getElementById('drw_3').onclick = () => { set_draw_mode(3) }
     </script>
   </body>
 </html>

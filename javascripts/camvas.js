@@ -66,9 +66,9 @@ function camvas(ctx, drawFunc, options) {
   // for streamed videos.
   this.video.setAttribute('autoplay', '1')
 
-  // The video should fill out all of the canvas
-  this.video.setAttribute('width', this.ctx.canvas.width)
-  this.video.setAttribute('height', this.ctx.canvas.height)
+  // The video size depends on mode config
+  this.video.setAttribute('width', this.profile.video.width.exact)
+  this.video.setAttribute('height', this.profile.video.height.exact)
 
   this.video.setAttribute('style', 'display:none')
   streamContainer.appendChild(this.video)
@@ -78,6 +78,7 @@ function camvas(ctx, drawFunc, options) {
   getUserMedia(this.profile, function(stream) {
     // Yay, now our webcam input is treated as a normal video and
     // we can start having fun
+    self.stream = stream;
     try {
       self.video.srcObject = stream;
     } catch (error) {
@@ -86,6 +87,7 @@ function camvas(ctx, drawFunc, options) {
     // Let's start drawing the canvas!
     self.update()
   }, function(err){
+    alert(`Your camera not support [${mode}]`);
     throw err
   })
 
@@ -137,5 +139,19 @@ function camvas(ctx, drawFunc, options) {
       ctx.canvas.height,
     );
   };
+
+  // close camvas
+  this.close = function(){
+    // stop stream
+    if(this.stream){
+      this.stream.getTracks().forEach(track => {
+        track.stop();
+      });
+    }
+    // clear video
+    this.video.pause();
+    this.video.src='';
+    this.video.parentNode.removeChild(this.video);
+  }
 }
 
