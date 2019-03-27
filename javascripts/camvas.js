@@ -95,7 +95,8 @@ function camvas(ctx, drawFunc, options) {
     // Let's start drawing the canvas!
     self.update()
   }, function(err){
-    alert(`Your camera not support [${mode}]`);
+    // alert(`Your camera not support [${mode}]`);
+    alert(err.message);
     throw err
   })
 
